@@ -1,5 +1,6 @@
 package com.gabriel.forum.controller;
 
+import com.gabriel.forum.controller.Form.AtualizacaoTopicoForm;
 import com.gabriel.forum.controller.Form.TopicoForm;
 import com.gabriel.forum.controller.dto.DetalhesDoTopicoDTO;
 import com.gabriel.forum.controller.dto.TopicoDTO;
@@ -9,6 +10,7 @@ import com.gabriel.forum.repositories.CursoRepository;
 import com.gabriel.forum.repositories.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -50,5 +52,12 @@ public class TopicosController {
     public DetalhesDoTopicoDTO detalhar (@PathVariable Long id){
         Topico topico = topicoRepository.getOne(id);
         return new DetalhesDoTopicoDTO(topico);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody @Valid AtualizacaoTopicoForm form ){
+        Topico topico = form.atualizar(id, topicoRepository);
+        return ResponseEntity.ok(new TopicoDTO(topico));
     }
 }
